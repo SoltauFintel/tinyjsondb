@@ -9,10 +9,12 @@ import java.util.stream.Collectors;
 import tinyjsondb.IdAccess.IdValue;
 
 public class Database {
+    private final JsonFileService fs;
     private final File folder;
     private final IdAccess idAccess;
     
-    public Database(String folder, Class<?>... classes) {
+    public Database(JsonFileService fs, String folder, Class<?>... classes) {
+        this.fs = fs;
         this.folder = new File(folder);
         idAccess = new IdAccess(classes);
     }
@@ -23,7 +25,7 @@ public class Database {
             throw new RuntimeException("Can not retrieve id from entity! Does a @Id annotated field exist?");
         }
         File file = getFile(extra, entity.getClass().getSimpleName(), j.getId());
-        FileService.saveJsonFile(file, entity);
+        fs.saveJsonFile(file, entity);
     }
 
     public void insert(String extra, Object entity) {
@@ -35,13 +37,13 @@ public class Database {
         if (file.exists()) {
             throw new RuntimeException("Object already exists!");
         }
-        FileService.saveJsonFile(file, entity);
+        fs.saveJsonFile(file, entity);
     }
 
     public void update(String extra, Object entity) {
         File file = getFile4Entity(extra, entity);
         if (file.isFile()) {
-            FileService.saveJsonFile(file, entity);
+            fs.saveJsonFile(file, entity);
         } else {
             throw new RuntimeException("Entity does not exist!");
         }
@@ -49,7 +51,7 @@ public class Database {
 
     public Object get(String extra, Class<?> cls, String id) {
         File file = getFile(extra, cls.getSimpleName(), id);
-        return FileService.loadJsonFile(file, cls);
+        return fs.loadJsonFile(file, cls);
     }
 
     public boolean delete(String extra, Class<?> cls, String id) {
@@ -86,12 +88,12 @@ public class Database {
      * @param cls -
      */
     public void dropCollection(String extra, Class<?> cls) {
-        FileService.deleteFolder(new File(folder, extra + cls.getSimpleName()));
+        fs.deleteFolder(new File(folder, extra + cls.getSimpleName()));
         removeExtraFolderIfEmpty(extra);
     }
 
     public List<Object> list(String extra, Class<?> cls) {
-        return listFiles(extra, cls).stream().map(file -> FileService.loadJsonFile(file, cls)).collect(Collectors.toList());
+        return listFiles(extra, cls).stream().map(file -> fs.loadJsonFile(file, cls)).collect(Collectors.toList());
     }
 
     public Iterator<?> iterator(String extra, Class<?> cls) {
@@ -106,7 +108,7 @@ public class Database {
 
             @Override
             public Object next() {
-                return FileService.loadJsonFile(files.get(++i), cls);
+                return fs.loadJsonFile(files.get(++i), cls);
             }
         };
     }
@@ -142,7 +144,7 @@ public class Database {
         String id = id(entity);
         String className = entity.getClass().getSimpleName();
         File file = new File(folder, extra + className + "/" + filename.replace("{id}", id));
-        FileService.savePlainTextFile(file, content);
+        fs.savePlainTextFile(file, content);
     }
     
     private File getFile4Entity(String extra, Object entity) {
@@ -161,8 +163,8 @@ public class Database {
 
     private void removeFolderIfEmpty(String extra, Class<?> cls) {
         File dir = new File(folder, extra + cls.getSimpleName());
-        if (FileService.isFolderEmpty(dir)) {
-            FileService.deleteFolder(dir);
+        if (fs.isFolderEmpty(dir)) {
+            fs.deleteFolder(dir);
             
             removeExtraFolderIfEmpty(extra);
         }
@@ -171,8 +173,8 @@ public class Database {
     private void removeExtraFolderIfEmpty(String extra) {
         if (!extra.isEmpty()) {
             File dir = new File(folder, extra);
-            if (FileService.isFolderEmpty(dir)) {
-                FileService.deleteFolder(dir);
+            if (fs.isFolderEmpty(dir)) {
+                fs.deleteFolder(dir);
             }
         }
     }

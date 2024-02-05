@@ -13,12 +13,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-public class FileService {
+public class JsonFileService {
 
-    private FileService() {
-    }
-    
-    public static boolean isFolderEmpty(File folder) {
+    public boolean isFolderEmpty(File folder) {
         if (folder.isDirectory()) {
             File[] files = folder.listFiles();
             return files != null && files.length == 0;
@@ -26,7 +23,7 @@ public class FileService {
         return false;
     }
 
-    public static void deleteFolder(File folder) {
+    public void deleteFolder(File folder) {
         try {
             if (folder.isDirectory()) {
                 Files.walk(folder.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
@@ -36,16 +33,16 @@ public class FileService {
         }
     }
     
-    public static <T> T loadJsonFile(File file, Class<T> type) {
+    public <T> T loadJsonFile(File file, Class<T> type) {
         String json = loadPlainTextFile(file);
         return json == null ? null : new Gson().fromJson(json, type);
     }
 
-    public static <T> void saveJsonFile(File file, T data) {
+    public <T> void saveJsonFile(File file, T data) {
         savePlainTextFile(file, data == null ? null : prettyJSON(data));
     }
 
-    public static String loadPlainTextFile(File file) {
+    public String loadPlainTextFile(File file) {
         if (file.isFile()) {
             try {
                 return new String(Files.readAllBytes(file.toPath()));
@@ -56,7 +53,7 @@ public class FileService {
         return null;
     }
 
-    public static void savePlainTextFile(File file, String content) {
+    public void savePlainTextFile(File file, String content) {
         if (content == null) {
             file.delete();
         } else {
@@ -69,7 +66,7 @@ public class FileService {
         }
     }
 
-    public static String prettyJSON(String json) {
+    public String prettyJSON(String json) {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement je = JsonParser.parseString(json);
@@ -79,7 +76,7 @@ public class FileService {
         }
     }
 
-    public static <T> String prettyJSON(T data) {
+    public <T> String prettyJSON(T data) {
         return prettyJSON(new Gson().toJson(data));
     }
 }

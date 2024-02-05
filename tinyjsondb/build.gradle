@@ -10,6 +10,7 @@ compileTestJava.options.encoding = 'UTF-8'
 
 dependencies {
     api 'com.google.code.gson:gson:2.10.1'
+    api 'de.mwvb:xmldocument:0.2.4'
     testImplementation 'junit:junit:4.12'
 }
 

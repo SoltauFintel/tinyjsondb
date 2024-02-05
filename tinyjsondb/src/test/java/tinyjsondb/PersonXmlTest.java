@@ -7,15 +7,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PersonTest {
+public class PersonXmlTest {
     private PersonDAO dao;
     private Person john;
     
     @Before
     public void init() {
         JsonFileService fs = new JsonFileService();
-        fs.deleteFolder(new File("testdata"));
-        AbstractDAO.database = new Database(fs, "testdata", Person.class);
+        fs.deleteFolder(new File("testdata-xml"));
+        AbstractDAO.database = new Database(fs, "testdata-xml", Person.class);
         dao = new PersonDAO();
     }
     
@@ -28,7 +28,7 @@ public class PersonTest {
         
         dao.insert(john);
         
-        Assert.assertTrue("File hasn't been saved!", new File("testdata/Person/" + john.getId() + ".json").isFile());
+        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".json").isFile());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class PersonTest {
         dao.insert(john);
         
         Assert.assertTrue("ID wasn't set!", john.getId() != null && !john.getId().isBlank());
-        Assert.assertTrue("File hasn't been saved!", new File("testdata/Person/" + john.getId() + ".json").isFile());
+        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".json").isFile());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class PersonTest {
         dao.insert(john);
         
         Assert.assertTrue("ID wasn't set!", john.getId() != null && !john.getId().isBlank());
-        Assert.assertTrue("File hasn't been saved!", new File("testdata/Person/" + john.getId() + ".json").isFile());
+        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".json").isFile());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class PersonTest {
         dao.save(john);
         
         // Verify 1
-        Assert.assertTrue("File hasn't been saved!", new File("testdata/Person/" + john.getId() + ".json").isFile());
+        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".json").isFile());
         
         // Test 2
         john.setSurname("McKenzie");
@@ -139,7 +139,7 @@ public class PersonTest {
         
         Assert.assertTrue(dao.deleteById(john.getId()));
 
-        Assert.assertFalse(new File("testdata/Person/" + john.getId() + ".json").isFile());
+        Assert.assertFalse(new File("testdata-xml/Person/" + john.getId() + ".json").isFile());
     }
 
     @Test
@@ -163,7 +163,7 @@ public class PersonTest {
         
         dao.dropCollection();
 
-        Assert.assertFalse(new File("testdata/Person").isDirectory());
+        Assert.assertFalse(new File("testdata-xml/Person").isDirectory());
     }
 
     @Test
@@ -239,6 +239,6 @@ public class PersonTest {
         dao.saveFile(jane, dn, "content for Jane");
         dao.saveFile(jane, "de/{id}.html", "Inhalt für Jane");
         
-        Assert.assertTrue(new File("testdata/Person/en/" + john.getId() + ".html").isFile());
+        Assert.assertTrue(new File("testdata-xml/Person/en/" + john.getId() + ".html").isFile());
     }
 }
