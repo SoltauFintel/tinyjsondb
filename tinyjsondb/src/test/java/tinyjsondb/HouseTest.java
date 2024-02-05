@@ -15,7 +15,7 @@ public class HouseTest {
     
     @Before
     public void init() {
-        JsonFileService fs = new JsonFileService();
+        FileService fs = new JsonFileService();
         fs.deleteFolder(new File("testdata"));
         AbstractDAO.database = new Database(fs, "testdata", Person.class, House.class);
         pdao = new PersonDAO();

@@ -13,7 +13,7 @@ public class PersonTest {
     
     @Before
     public void init() {
-        JsonFileService fs = new JsonFileService();
+        FileService fs = new JsonFileService();
         fs.deleteFolder(new File("testdata"));
         AbstractDAO.database = new Database(fs, "testdata", Person.class);
         dao = new PersonDAO();

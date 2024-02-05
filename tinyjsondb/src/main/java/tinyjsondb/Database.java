@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 import tinyjsondb.IdAccess.IdValue;
 
 public class Database {
-    private final JsonFileService fs;
+    private final FileService fs;
     private final File folder;
     private final IdAccess idAccess;
     
-    public Database(JsonFileService fs, String folder, Class<?>... classes) {
+    public Database(FileService fs, String folder, Class<?>... classes) {
         this.fs = fs;
         this.folder = new File(folder);
         idAccess = new IdAccess(classes);
@@ -25,7 +25,7 @@ public class Database {
             throw new RuntimeException("Can not retrieve id from entity! Does a @Id annotated field exist?");
         }
         File file = getFile(extra, entity.getClass().getSimpleName(), j.getId());
-        fs.saveJsonFile(file, entity);
+        fs.saveFile(file, entity);
     }
 
     public void insert(String extra, Object entity) {
@@ -37,13 +37,13 @@ public class Database {
         if (file.exists()) {
             throw new RuntimeException("Object already exists!");
         }
-        fs.saveJsonFile(file, entity);
+        fs.saveFile(file, entity);
     }
 
     public void update(String extra, Object entity) {
         File file = getFile4Entity(extra, entity);
         if (file.isFile()) {
-            fs.saveJsonFile(file, entity);
+            fs.saveFile(file, entity);
         } else {
             throw new RuntimeException("Entity does not exist!");
         }
@@ -51,7 +51,7 @@ public class Database {
 
     public Object get(String extra, Class<?> cls, String id) {
         File file = getFile(extra, cls.getSimpleName(), id);
-        return fs.loadJsonFile(file, cls);
+        return fs.loadFile(file, cls);
     }
 
     public boolean delete(String extra, Class<?> cls, String id) {
@@ -93,7 +93,7 @@ public class Database {
     }
 
     public List<Object> list(String extra, Class<?> cls) {
-        return listFiles(extra, cls).stream().map(file -> fs.loadJsonFile(file, cls)).collect(Collectors.toList());
+        return listFiles(extra, cls).stream().map(file -> fs.loadFile(file, cls)).collect(Collectors.toList());
     }
 
     public Iterator<?> iterator(String extra, Class<?> cls) {
@@ -108,7 +108,7 @@ public class Database {
 
             @Override
             public Object next() {
-                return fs.loadJsonFile(files.get(++i), cls);
+                return fs.loadFile(files.get(++i), cls);
             }
         };
     }
@@ -124,7 +124,7 @@ public class Database {
             File[] files = dir.listFiles();
             if (files != null) {
                 for (File file : files) {
-                    if (file.isFile() && file.getName().endsWith(".json")) {
+                    if (file.isFile() && file.getName().endsWith(fs.getSuffix())) {
                         ret.add(file);
                     }
                 }
@@ -153,7 +153,7 @@ public class Database {
     }
 
     private File getFile(String extra, String className, String id) {
-        return new File(folder, extra + className + "/" + id + ".json");
+        return new File(folder, extra + className + "/" + id + fs.getSuffix());
         
         //   <base folder>  /   Person  /  <ID>.json
         //   <base folder>  /   Person  /  <ID>       / House / <House_ID>.json

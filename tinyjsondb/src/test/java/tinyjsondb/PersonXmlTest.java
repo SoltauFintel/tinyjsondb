@@ -13,7 +13,7 @@ public class PersonXmlTest {
     
     @Before
     public void init() {
-        JsonFileService fs = new JsonFileService();
+        FileService fs = new XmlFileService();
         fs.deleteFolder(new File("testdata-xml"));
         AbstractDAO.database = new Database(fs, "testdata-xml", Person.class);
         dao = new PersonDAO();
@@ -28,7 +28,7 @@ public class PersonXmlTest {
         
         dao.insert(john);
         
-        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".json").isFile());
+        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".xml").isFile());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class PersonXmlTest {
         dao.insert(john);
         
         Assert.assertTrue("ID wasn't set!", john.getId() != null && !john.getId().isBlank());
-        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".json").isFile());
+        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".xml").isFile());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class PersonXmlTest {
         dao.insert(john);
         
         Assert.assertTrue("ID wasn't set!", john.getId() != null && !john.getId().isBlank());
-        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".json").isFile());
+        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".xml").isFile());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class PersonXmlTest {
         dao.save(john);
         
         // Verify 1
-        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".json").isFile());
+        Assert.assertTrue("File hasn't been saved!", new File("testdata-xml/Person/" + john.getId() + ".xml").isFile());
         
         // Test 2
         john.setSurname("McKenzie");
@@ -139,7 +139,7 @@ public class PersonXmlTest {
         
         Assert.assertTrue(dao.deleteById(john.getId()));
 
-        Assert.assertFalse(new File("testdata-xml/Person/" + john.getId() + ".json").isFile());
+        Assert.assertFalse(new File("testdata-xml/Person/" + john.getId() + ".xml").isFile());
     }
 
     @Test
