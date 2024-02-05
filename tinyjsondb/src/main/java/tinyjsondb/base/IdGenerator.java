@@ -1,4 +1,4 @@
-package tinyjsondb;
+package tinyjsondb.base;
 
 import java.util.UUID;
 import java.util.zip.CRC32;

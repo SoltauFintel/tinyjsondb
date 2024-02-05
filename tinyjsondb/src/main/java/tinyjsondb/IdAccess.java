@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import tinyjsondb.base.IdGenerator;
+
 public class IdAccess {
     /** class name, Id field */
     private final Map<String, Field> fieldMap = new HashMap<>();

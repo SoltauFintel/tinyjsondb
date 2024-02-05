@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import tinyjsondb.base.IdGenerator;
+
 public class PersonXmlTest {
     private PersonDAO dao;
     private Person john;
