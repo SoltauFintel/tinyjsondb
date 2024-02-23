@@ -11,6 +11,8 @@ compileTestJava.options.encoding = 'UTF-8'
 dependencies {
     api 'com.google.code.gson:gson:2.10.1'
     api 'de.mwvb:xmldocument:0.2.4'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r'
+    implementation 'org.gitlab4j:gitlab4j-api:5.0.1' // keep this version
     testImplementation 'junit:junit:4.12'
 }
 
